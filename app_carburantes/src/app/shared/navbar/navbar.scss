@@ -1,0 +1,85 @@
+.navbar {
+  width: 100%;
+  background: linear-gradient(135deg, #0f172a, #2a5298); /* azul degradado */
+  padding: 0.85rem 0;
+  color: white;
+}
+
+.nav-container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo */
+.logo a {
+  color: white;
+  font-weight: 800;
+  font-size: 1.2rem;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-img {
+  height: 2rem;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Menú */
+.menu {
+  list-style: none;
+  display: flex;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+
+  a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    position: relative;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  /* Hover */
+  a:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  /* Enlace activo */
+  a.active {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  /* Indicador inferior activo */
+  a.active::after {
+    content: '';
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    bottom: -6px;
+    height: 3px;
+    background: #f59e0b; // naranja acento
+    border-radius: 3px;
+  }
+}
+
+/* Responsive simple */
+@media (max-width: 640px) {
+  .menu {
+    gap: 0.75rem;
+
+    a {
+      font-size: 0.9rem;
+    }
+  }
+}

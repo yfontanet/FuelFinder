@@ -1,0 +1,233 @@
+.search-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  color: #1e3c72;
+  margin-bottom: .5rem;
+}
+
+.page-header p {
+  color: #64748b;
+}
+
+.filters-card,
+.results-card {
+  background: white;
+
+  border-radius: 1rem;
+
+  padding: 2rem;
+
+  margin-bottom: 2rem;
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.08);
+}
+
+.filters-card h2,
+.results-card h2 {
+  color: #1e3c72;
+  margin-bottom: 1.5rem;
+}
+
+.station-selector {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.radio-card {
+  cursor: pointer;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  transition: .3s;
+
+}
+
+.radio-card:hover {
+  border-color: #2a5298;
+}
+
+.radio-card input {
+  margin-right: .5rem;
+}
+
+.filters-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(250px, 1fr));
+
+  gap: 1.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  margin-bottom: .5rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.field select,
+.field input {
+  padding: .9rem;
+
+  border-radius: .75rem;
+
+  border: 1px solid #cbd5e1;
+
+  background: white;
+}
+
+.field select:focus,
+.field input:focus {
+  outline: none;
+  border-color: #2a5298;
+}
+
+.search-btn {
+  margin-top: 2rem;
+
+  background: #f59e0b;
+
+  color: white;
+
+  border: none;
+
+  padding: 1rem 2rem;
+
+  border-radius: .75rem;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: .3s;
+}
+
+.search-btn:hover {
+  background: #d97706;
+  transform: translateY(-2px);
+}
+
+.results-grid {
+
+  margin-top: 1.5rem;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(280px, 1fr));
+
+  gap: 1.5rem;
+}
+
+.station-card {
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 1rem;
+
+  padding: 1.5rem;
+
+  transition: .3s;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,.05);
+}
+
+.station-card:hover {
+
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 12px 25px rgba(0,0,0,.1);
+}
+
+.station-card h3 {
+
+  color: #1e3c72;
+
+  margin-bottom: 1rem;
+}
+
+.station-card p {
+
+  color: #475569;
+
+  margin-bottom: .5rem;
+}
+
+.price {
+
+  margin-top: 1rem;
+
+  font-size: 1.4rem;
+
+  font-weight: 700;
+
+  color: #f59e0b;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 2rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+
+  margin: 0 auto 1rem;
+
+  border: 5px solid #e2e8f0;
+  border-top: 5px solid #f59e0b;
+
+  border-radius: 50%;
+
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.search-btn:disabled {
+  opacity: .7;
+  cursor: not-allowed;
+}
+
+.logo-img {
+  height: 25px;
+  width: auto;
+  object-fit: contain;
+  padding-left: 1rem;
+}
+
+.logo-card {
+  height: 25px;
+  width: auto;
+  object-fit: contain;
+  margin-right: .5rem;
+}

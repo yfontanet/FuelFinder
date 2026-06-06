@@ -1,0 +1,111 @@
+/* HERO SECTION */
+.hero {
+  text-align: center;
+  padding: 6rem 1.5rem;
+  background: linear-gradient(135deg, #0f172a, #2a5298); /* azul degradado */
+  color: white;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  margin-bottom: 3rem;
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+  }
+  
+  .btn-primary {
+    background: #f59e0b;
+    display: inline-block;
+    padding: 0.8rem 1.6rem;
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.25s ease;
+
+    &:hover {
+      background-color: #d97706;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+    }
+  }
+}
+
+/* CONTAINER + CARDS */
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 2rem;
+  padding: 1rem 5rem 4rem;
+}
+
+.card {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(30, 60, 114, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  h2 {
+    margin-bottom: 1rem;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #1e3c72;
+  }
+
+  p {
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+
+  &:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 16px 30px rgba(30, 60, 114, 0.25);
+    border-color: #2a5298;
+  }
+}
+
+/* Imagen dentro de card */
+.card-image {
+  width: 100%;
+  max-width: 180px;
+  display: block;
+  margin: 1.5rem auto 0;
+  transition: transform 0.3s ease;
+
+  .card:hover & {
+    transform: scale(1.08);
+  }
+}
+
+/* botón */
+.btn-secondary {
+  display: inline-block;
+  padding: 0.7rem 1.4rem;
+  background-color: #1e3c72;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  transition: all 0.25s ease;
+  align-items: center;
+
+  &:hover {
+    background-color: #2a5298;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(30, 60, 114, 0.3);
+  }
+}

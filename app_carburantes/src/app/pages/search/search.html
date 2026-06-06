@@ -1,0 +1,204 @@
+<div class="search-container">
+
+  <div class="page-header">
+
+    <h1>Buscar gasolineras</h1>
+
+    <p>
+      Selecciona el tipo de estación y configura los filtros
+      para encontrar la mejor opción.
+    </p>
+
+  </div>
+
+  <section class="filters-card">
+
+    <h2>Filtros de búsqueda</h2>
+
+    <div class="station-selector">
+
+      <label class="radio-card">
+
+        <input
+          type="radio"
+          name="tipo"
+          value="terrestre"
+          [(ngModel)]="stationType"
+          (change)="onStationTypeChange()">
+
+        <span>Terrestre<img src="assets/images/terrestre.png" class="logo-img"></span>
+
+      </label>
+
+      <label class="radio-card">
+
+        <input
+          type="radio"
+          name="tipo"
+          value="maritima"
+          [(ngModel)]="stationType"
+          (change)="onStationTypeChange()">
+
+        <span>Marítima<img src="assets/images/maritima.png" class="logo-img"></span>
+
+      </label>
+
+    </div>
+
+    <div class="filters-grid">
+
+      @if(stationType === 'terrestre') {
+
+        <div class="field">
+          <label>Comunidad Autónoma</label>
+          <select [(ngModel)]="filters.comunidad" (change)="onCommunityChange()">
+            <option value="">
+              Selecciona una comunidad
+            </option>
+
+            @for (
+                comunidad of comunidades;
+                track comunidad
+            ) {
+                <option [value]="comunidad">{{ comunidad }}</option>
+                }
+          </select>
+        </div>
+      }
+
+      <div class="field">
+        <label>Provincia</label>
+        <select [(ngModel)]="filters.provincia">
+            <option value="">Selecciona una provincia</option>
+            @for (
+                provincia of provinciasFiltradas;
+                track provincia
+            ) {
+                <option [value]="provincia">{{ provincia }} </option>
+            }
+            </select>
+      </div>
+
+      <div class="field">
+
+        <label>Tipo de carburante</label>
+
+        <select [(ngModel)]="filters.carburante">
+
+          <option value="">
+            Selecciona un carburante
+          </option>
+
+          @for (carburante of carburantes; track carburante) {
+
+            <option [value]="carburante">
+              {{ carburante }}
+            </option>
+
+          }
+
+        </select>
+
+      </div>
+
+      @if(stationType === 'terrestre') {
+
+        <div class="field">
+
+          <label>Fecha</label>
+
+          <input
+            type="date"
+            [(ngModel)]="filters.fecha">
+
+        </div>
+
+      }
+
+      <div class="field">
+
+        <label>Nº resultados</label>
+
+        <select [(ngModel)]="filters.cantidad">
+
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+          <option [value]="15">15</option>
+          <option [value]="20">20</option>
+
+        </select>
+
+      </div>
+
+      <div class="field">
+
+        <label>Ordenar por</label>
+
+        <select [(ngModel)]="filters.orden">
+
+          <option value="asc">
+            Precio más barato
+          </option>
+
+          <option value="desc">
+            Precio más caro
+          </option>
+
+        </select>
+      </div>
+    </div>
+    <button class="search-btn" (click)="search()" [disabled]="loading">
+        @if(loading) {
+            Buscando...
+        } @else {
+             Buscar
+        }
+    </button>  
+  </section>
+
+  @if(loading) {
+    <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Buscando estaciones de servicio...</p>
+    </div>
+  } @else {
+    <section class="results-card">
+        <h2>Resultados</h2>
+        @if(results.length === 0) {
+            <p>
+            No hay resultados para mostrar.
+            </p>
+        } @else {
+            <p>Se muestran {{ results.length }} resultados.</p>
+            <div class="results-grid">
+            @for(station of results; track (station.IDEESS ?? station.IDPosteMaritimo)) {
+                <div class="station-card">
+                    <h3>{{ station['Rótulo'] }}</h3>
+                    <p><img src="assets/images/direccion.png" class="logo-card"> {{ station['Dirección'] }}</p>
+                    <p><img src="assets/images/municipio.png" class="logo-card"> {{ station['Municipio'] }}</p>
+                    @if(stationType === 'maritima') {
+                        <p><img src="assets/images/puerto.png" class="logo-card">Puerto: {{ station['Puerto'] }}</p>
+                    }
+                    <p><img src="assets/images/provincia.png" class="logo-card"> {{ station['Provincia'] }}</p>
+                    @if(filters.carburante) {
+                        <div class="price">
+                            {{ station[getFuelProperty()] }}
+                            €/L
+                        </div>
+                    } @else {
+                        <div class="fuel-list">
+                            @for(
+                                fuel of getAvailableFuels(station);
+                                track fuel.name
+                            ) {
+                                <br>
+                                <p><strong>- {{ fuel.name }}</strong>: {{ fuel.price }} €/L</p>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+  </section>
+}
