@@ -36,12 +36,24 @@ export class Search {
   provinciasFiltradas: string[] = [];
 
   onStationTypeChange() {
-    this.filters.provincia = '';
+    this.loading = false;
+    // Limpiar resultados anteriores
+    this.results = [];
+
+    // Reiniciar filtros
+    this.filters = {
+      ...this.defaultFilters
+    };
+
+    // Reiniciar provincias disponibles
     if (this.stationType === 'maritima') {
       this.provinciasFiltradas = this.todasLasProvincias;
     } else {
       this.provinciasFiltradas = [];
     }
+
+    // Asegurar actualización de la vista
+    this.cdr.detectChanges();
   }
 
   get carburantes() {
@@ -50,7 +62,7 @@ export class Search {
       : CARBURANTES_MARITIMOS;
   }
 
-  filters = {
+  private readonly defaultFilters = {
     comunidad: '',
     provincia: '',
     carburante: '',
@@ -59,12 +71,39 @@ export class Search {
     orden: 'asc'
   };
 
+  filters = { ...this.defaultFilters };
+
   private fuelService = inject(FuelService);
   results: any[] = [];
   loading = false;
 
-  search() {
+  async search() {
     this.loading = true;
+    this.cdr.detectChanges();
+
+    let userLat: number;
+    let userLon: number;
+
+    try {
+
+      const position =
+        await this.getCurrentPosition();
+
+      userLat =
+        position.coords.latitude;
+
+      userLon =
+        position.coords.longitude;
+
+    } catch (error) {
+      
+      alert(
+        'Es necesario permitir la geolocalización para buscar las estaciones más cercanas.' + 'Comprueba los permisos del navegador y del ordenador.'
+      );
+
+      this.loading = false;
+      return;
+    }
 
     const request =
       this.stationType === 'terrestre'
@@ -72,7 +111,7 @@ export class Search {
         : this.fuelService.getMaritimeStations();
 
     request.subscribe(response => {
-
+    
       let stations =
         response.ListaEESSPrecio;
 
@@ -125,7 +164,38 @@ export class Search {
 
       }
 
-      // LIMITAR RESULTADOS
+      stations = stations.map(
+        (station: any) => {
+
+          const lat =
+            parseFloat(
+              station['Latitud']
+                .replace(',', '.')
+            );
+
+          const lon =
+            parseFloat(
+              station['Longitud (WGS84)']
+                .replace(',', '.')
+            );
+
+          return {
+            ...station,
+            distance:
+              this.calculateDistance(
+                userLat,
+                userLon,
+                lat,
+                lon
+              )
+          };
+        }
+      );
+
+      stations.sort(
+        (a: any, b: any) =>
+          a.distance - b.distance
+      );
 
       this.results =
         stations.slice(
@@ -139,7 +209,6 @@ export class Search {
 
     });
   }
-  
 
   getFuelProperty(): string {
     switch (this.filters.carburante) {
@@ -210,5 +279,70 @@ export class Search {
       ] || [];
   }
 
+  private getCurrentPosition(): Promise<GeolocationPosition> {
+      return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            console.log('Accuracy:',position.coords.accuracy);
+            resolve(position);
+          },
+          reject,
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+          }
+        );
+      });
+    }
+
+  private toRadians(value: number): number {
+    return value * Math.PI / 180;
+  }
+
+  private calculateDistance(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ): number {
+
+    const R = 6371;
+
+    const dLat =
+      this.toRadians(lat2 - lat1);
+
+    const dLon =
+      this.toRadians(lon2 - lon1);
+
+    const a =
+      Math.sin(dLat / 2) *
+        Math.sin(dLat / 2) +
+      Math.cos(this.toRadians(lat1)) *
+        Math.cos(this.toRadians(lat2)) *
+      Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+
+    const c =
+      2 *
+      Math.atan2(
+        Math.sqrt(a),
+        Math.sqrt(1 - a)
+      );
+
+    return R * c;
+  }
+
+  getDirectionsUrl(station: any): string {
+    const lat =
+      station['Latitud']
+        .replace(',', '.');
+
+    const lon =
+      station['Longitud (WGS84)']
+        .replace(',', '.');
+
+    return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`;
+  }
 
 }

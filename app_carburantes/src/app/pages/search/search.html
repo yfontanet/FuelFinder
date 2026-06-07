@@ -180,6 +180,8 @@
                         <p><img src="assets/images/puerto.png" class="logo-card">Puerto: {{ station['Puerto'] }}</p>
                     }
                     <p><img src="assets/images/provincia.png" class="logo-card"> {{ station['Provincia'] }}</p>
+                    <p><img src="assets/images/distancia.png" class="logo-card"> {{ station.distance | number:'1.1-1' }} km</p>
+                    <img src="assets/images/mapa.png" class="logo-card"><a [href]="getDirectionsUrl(station)" target="_blank" rel="noopener noreferrer" class="maps-link">Cómo llegar</a>
                     @if(filters.carburante) {
                         <div class="price">
                             {{ station[getFuelProperty()] }}
