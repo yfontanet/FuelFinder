@@ -96,13 +96,16 @@ export class Search {
         position.coords.longitude;
 
     } catch (error) {
-      
+
       alert(
-        'Es necesario permitir la geolocalización para buscar las estaciones más cercanas.' + 'Comprueba los permisos del navegador y del ordenador.'
+        'Es necesario permitir la geolocalización para buscar las estaciones más cercanas. Comprueba los permisos del navegador y del ordenador.'
       );
 
       this.loading = false;
+      this.cdr.detectChanges();
+
       return;
+
     }
 
     const request =
@@ -111,9 +114,12 @@ export class Search {
         : this.fuelService.getMaritimeStations();
 
     request.subscribe(response => {
-    
+
       let stations =
         response.ListaEESSPrecio;
+
+      const fuelProperty =
+        this.getFuelProperty();
 
       // FILTRAR PROVINCIA
 
@@ -131,38 +137,15 @@ export class Search {
 
       if (this.filters.carburante) {
 
-        const fuelProperty =
-          this.getFuelProperty();
-
         stations = stations.filter(
           (s: any) =>
             s[fuelProperty] &&
             s[fuelProperty] !== ''
         );
 
-        // ORDENAR POR PRECIO
-
-        stations.sort(
-          (a: any, b: any) => {
-
-            const priceA =
-              this.parsePrice(
-                a[fuelProperty]
-              );
-
-            const priceB =
-              this.parsePrice(
-                b[fuelProperty]
-              );
-
-            return this.filters.orden === 'asc'
-              ? priceA - priceB
-              : priceB - priceA;
-
-          }
-        );
-
       }
+
+      // CALCULAR DISTANCIA
 
       stations = stations.map(
         (station: any) => {
@@ -189,13 +172,49 @@ export class Search {
                 lon
               )
           };
+
         }
       );
+
+      // ORDENAR POR DISTANCIA
 
       stations.sort(
         (a: any, b: any) =>
           a.distance - b.distance
       );
+
+      // QUEDARSE CON LAS 20 MÁS CERCANAS
+
+      stations =
+        stations.slice(0, 20);
+
+      // ENTRE LAS MÁS CERCANAS, ORDENAR POR PRECIO
+
+      if (this.filters.carburante) {
+
+        stations.sort(
+          (a: any, b: any) => {
+
+            const priceA =
+              this.parsePrice(
+                a[fuelProperty]
+              );
+
+            const priceB =
+              this.parsePrice(
+                b[fuelProperty]
+              );
+
+            return this.filters.orden === 'asc'
+              ? priceA - priceB
+              : priceB - priceA;
+
+          }
+        );
+
+      }
+
+      // LIMITAR RESULTADOS FINALES
 
       this.results =
         stations.slice(
@@ -208,6 +227,7 @@ export class Search {
       this.cdr.detectChanges();
 
     });
+
   }
 
   getFuelProperty(): string {
